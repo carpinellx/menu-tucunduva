@@ -95,13 +95,20 @@ export default function CategoryManager({ categories, items, onChange, showToast
       {sorted.length === 0 && <p className="empty-hint">Nenhuma categoria ainda. Adicione a primeira abaixo.</p>}
       {sorted.map((c, idx) => (
         <div className="cat-row" key={c.id}>
-          <button className="icon-btn" disabled={idx === 0} title="Mover para cima" onClick={() => handleMove(c.id, -1)}>
+          <button
+            className="icon-btn"
+            disabled={idx === 0}
+            title="Mover para cima"
+            aria-label={`Mover categoria ${c.name} para cima`}
+            onClick={() => handleMove(c.id, -1)}
+          >
             ↑
           </button>
           <button
             className="icon-btn"
             disabled={idx === sorted.length - 1}
             title="Mover para baixo"
+            aria-label={`Mover categoria ${c.name} para baixo`}
             onClick={() => handleMove(c.id, 1)}
           >
             ↓
@@ -110,6 +117,7 @@ export default function CategoryManager({ categories, items, onChange, showToast
             <input
               className="cat-inline-input"
               autoFocus
+              aria-label={`Renomear categoria ${c.name}`}
               value={editValue}
               onChange={(e) => setEditValue(e.target.value)}
               onBlur={commitEdit}
@@ -121,10 +129,10 @@ export default function CategoryManager({ categories, items, onChange, showToast
           ) : (
             <span className="cat-row-name">{c.name}</span>
           )}
-          <button className="icon-btn" title="Renomear" onClick={() => startEdit(c)}>
+          <button className="icon-btn" title="Renomear" aria-label={`Renomear categoria ${c.name}`} onClick={() => startEdit(c)}>
             ✎
           </button>
-          <button className="icon-btn" title="Excluir" onClick={() => handleDelete(c.id)}>
+          <button className="icon-btn" title="Excluir" aria-label={`Excluir categoria ${c.name}`} onClick={() => handleDelete(c.id)}>
             ✕
           </button>
         </div>

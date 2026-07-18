@@ -205,7 +205,13 @@ export default function ItemFormModal({ categories, items, editingItem, onClose,
           </div>
 
           <div className="field" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <div className={`toggle ${visible ? 'on' : ''}`} onClick={() => setVisible((v) => !v)} />
+            <button
+              type="button"
+              className={`toggle ${visible ? 'on' : ''}`}
+              aria-pressed={visible}
+              aria-label="Visível no cardápio"
+              onClick={() => setVisible((v) => !v)}
+            />
             <label style={{ margin: 0, textTransform: 'none', fontWeight: 600, color: 'var(--ink)', fontSize: 14 }}>
               Visível no cardápio
             </label>

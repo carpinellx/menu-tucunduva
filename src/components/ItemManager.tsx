@@ -68,12 +68,15 @@ export default function ItemManager({ categories, items, onChange, onEdit, onNew
                   {item.name}
                   <small>{formatPrice(item.price)}</small>
                 </span>
-                <div
+                <button
+                  type="button"
                   className={`toggle ${item.visible ? 'on' : ''}`}
                   title="Visível no cardápio"
+                  aria-pressed={item.visible}
+                  aria-label={item.visible ? `Ocultar ${item.name} do cardápio` : `Mostrar ${item.name} no cardápio`}
                   onClick={() => handleToggle(item)}
                 />
-                <button className="icon-btn" title="Editar" onClick={() => onEdit(item)}>
+                <button className="icon-btn" title="Editar" aria-label={`Editar ${item.name}`} onClick={() => onEdit(item)}>
                   ✎
                 </button>
               </div>
