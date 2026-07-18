@@ -23,6 +23,7 @@ export default function ItemFormModal({ categories, items, editingItem, onClose,
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [photoRemoved, setPhotoRemoved] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
 
   useEffect(() => {
     if (editingItem) {
@@ -42,6 +43,7 @@ export default function ItemFormModal({ categories, items, editingItem, onClose,
     }
     setPhotoFile(null);
     setPhotoRemoved(false);
+    setFormError(null);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editingItem]);
 
@@ -62,8 +64,24 @@ export default function ItemFormModal({ categories, items, editingItem, onClose,
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
+    setFormError(null);
+
+    const trimmedName = name.trim();
+    if (!trimmedName) {
+      setFormError('Digite um nome para o item.');
+      return;
+    }
+
     const priceNum = parseFloat(price);
-    if (!name.trim() || Number.isNaN(priceNum) || !categoryId) return;
+    if (Number.isNaN(priceNum) || priceNum <= 0) {
+      setFormError('Digite um preço maior que zero.');
+      return;
+    }
+
+    if (!categoryId) {
+      setFormError('Escolha uma categoria.');
+      return;
+    }
 
     setSaving(true);
     try {
@@ -79,7 +97,7 @@ export default function ItemFormModal({ categories, items, editingItem, onClose,
 
       if (editingItem) {
         await updateItem(editingItem.id, {
-          name: name.trim(),
+          name: trimmedName,
           description: description.trim(),
           price: priceNum,
           category_id: categoryId,
@@ -89,7 +107,7 @@ export default function ItemFormModal({ categories, items, editingItem, onClose,
       } else {
         const maxOrder = items.filter((i) => i.category_id === categoryId).reduce((m, i) => Math.max(m, i.sort_order), -1);
         await createItem({
-          name: name.trim(),
+          name: trimmedName,
           description: description.trim(),
           price: priceNum,
           category_id: categoryId,
@@ -186,7 +204,7 @@ export default function ItemFormModal({ categories, items, editingItem, onClose,
               id="itemPrice"
               type="number"
               step="0.01"
-              min="0"
+              min="0.01"
               value={price}
               onChange={(e) => setPrice(e.target.value)}
               required
@@ -216,6 +234,8 @@ export default function ItemFormModal({ categories, items, editingItem, onClose,
               Visível no cardápio
             </label>
           </div>
+
+          {formError && <div className="field-error">{formError}</div>}
 
           <div className="btn-row spread">
             {editingItem ? (
