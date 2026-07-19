@@ -105,7 +105,24 @@ function itemsFor(catId: string): Item[] {
       )}
 
       <main className="menu-main">
-        {loading && <p className="empty-state">Carregando cardápio…</p>}
+        {loading && (
+          <div className="skeleton-wrap" aria-label="Carregando cardápio" role="status">
+            {[0, 1].map((section) => (
+              <div key={section} className="cat-section">
+                <div className="skeleton skeleton-title" />
+                {[0, 1, 2].map((row) => (
+                  <div key={row} className="item-card">
+                    <div className="skeleton skeleton-photo" />
+                    <div className="item-body">
+                      <div className="skeleton skeleton-line" style={{ width: '55%' }} />
+                      <div className="skeleton skeleton-line" style={{ width: '85%' }} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        )}
 
         {!loading && error && (
           <div className="empty-state">

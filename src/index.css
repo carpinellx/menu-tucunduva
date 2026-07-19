@@ -122,6 +122,22 @@ main.menu-main { max-width: 680px; margin: 0 auto; padding: 8px 20px 80px; }
 .item-row-top { display: flex; align-items: baseline; gap: 6px; }
 .item-name { font-family: 'Fraunces', serif; font-weight: 600; font-size: 17px; white-space: normal; word-break: break-word; }
 .item-leader { flex: 1 1 auto; min-width: 10px; border-bottom: 1px dotted var(--line); margin-bottom: 5px; }
+
+/* ---------- Skeleton (loading state) ---------- */
+.skeleton {
+  background: var(--surface-2); border-radius: 6px;
+  animation: skeleton-pulse 1.3s ease-in-out infinite;
+}
+.skeleton-title { width: 140px; height: 22px; border-radius: 4px; }
+.skeleton-photo { width: 72px; height: 72px; border-radius: 10px; flex: 0 0 auto; }
+.skeleton-line { height: 14px; margin: 6px 0; }
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .skeleton { animation: none; }
+}
 .item-price { font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 500; color: var(--brick); white-space: nowrap; }
 .item-desc { color: var(--ink-soft); font-size: 13.5px; line-height: 1.5; margin-top: 4px; }
 
