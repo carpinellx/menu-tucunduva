@@ -144,6 +144,23 @@ function itemsFor(catId: string): Item[] {
       </main>
 
       <footer className="site-footer">
+        <div className="footer-contact">
+          <p className="footer-line">Rod. Dom Gabriel Paulino Bueno Couto, km 92,5 — Pedregulho, Cabreúva</p>
+          <p className="footer-line">Sábado e domingo, das 12h às 17h</p>
+          <p className="footer-line">
+            <a href="https://wa.me/5511980435834" target="_blank" rel="noopener noreferrer">
+              (11) 98043-5834
+            </a>
+            {' · '}
+            <a
+              href="https://instagram.com/fazendatucunduva"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              @fazendatucunduva
+            </a>
+          </p>
+        </div>
         <Link to="/admin" className="admin-link">
           Área administrativa
         </Link>
