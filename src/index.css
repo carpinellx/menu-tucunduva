@@ -101,7 +101,7 @@ main.menu-main { max-width: 680px; margin: 0 auto; padding: 8px 20px 80px; }
 .empty-state { text-align: center; padding: 80px 20px; color: var(--ink-soft); }
 .empty-state h2 { font-family: 'Fraunces', serif; font-style: italic; font-weight: 500; color: var(--ink); }
 
-.cat-section { margin-top: 44px; }
+.cat-section { margin-top: 44px; scroll-margin-top: 64px; }
 .cat-section-head { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
 .cat-section-head h2 {
   font-family: 'Fraunces', serif; font-style: italic; font-weight: 500;

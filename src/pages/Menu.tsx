@@ -12,6 +12,8 @@ export default function Menu() {
   const [activeCat, setActiveCat] = useState<string | null>(null);
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
   const pillRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+  const isClickScrolling = useRef(false);
+  const clickScrollTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -39,6 +41,8 @@ export default function Menu() {
 
   const observer = new IntersectionObserver(
     (entries) => {
+      if (isClickScrolling.current) return;
+
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           const id = entry.target.id.replace('sec-', '');
@@ -67,6 +71,12 @@ useEffect(() => {
   });
 }, [activeCat]);
 
+useEffect(() => {
+  return () => {
+    if (clickScrollTimeout.current) clearTimeout(clickScrollTimeout.current);
+  };
+}, []);
+
 function itemsFor(catId: string): Item[] {
     return items
       .filter((i) => i.category_id === catId && i.visible)
@@ -74,7 +84,14 @@ function itemsFor(catId: string): Item[] {
   }
 
   function scrollToCat(id: string) {
-    sectionRefs.current[id]?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    isClickScrolling.current = true;
+    setActiveCat(id);
+    sectionRefs.current[id]?.scrollIntoView({ behavior: 'auto', block: 'start' });
+
+    if (clickScrollTimeout.current) clearTimeout(clickScrollTimeout.current);
+    clickScrollTimeout.current = setTimeout(() => {
+      isClickScrolling.current = false;
+    }, 150);
   }
 
   return (
