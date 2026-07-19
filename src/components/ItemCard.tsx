@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { Item } from '../lib/types';
 import { tagLabel } from '../lib/dietaryTags';
+import PhotoLightbox from './PhotoLightbox';
 
 function formatPrice(v: number): string {
   return 'R$ ' + v.toFixed(2).replace('.', ',');
@@ -8,20 +9,28 @@ function formatPrice(v: number): string {
 
 export default function ItemCard({ item, compact = false }: { item: Item; compact?: boolean }) {
   const [photoFailed, setPhotoFailed] = useState(false);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
   const showPhoto = !compact && item.photo_url && !photoFailed;
 
   return (
     <div className={`item-card ${compact ? 'item-card--compact' : ''}`}>
       {!compact &&
         (showPhoto ? (
-          <img
-            className="item-photo"
-            src={item.photo_url!}
-            alt={item.name}
-            loading="lazy"
-            decoding="async"
-            onError={() => setPhotoFailed(true)}
-          />
+          <button
+            type="button"
+            className="item-photo-btn"
+            aria-label={`Ver foto de ${item.name} ampliada`}
+            onClick={() => setLightboxOpen(true)}
+          >
+            <img
+              className="item-photo"
+              src={item.photo_url!}
+              alt={item.name}
+              loading="lazy"
+              decoding="async"
+              onError={() => setPhotoFailed(true)}
+            />
+          </button>
         ) : (
           <div className="item-photo-ph">FT</div>
         ))}
@@ -42,6 +51,15 @@ export default function ItemCard({ item, compact = false }: { item: Item; compac
           </div>
         )}
       </div>
+
+      {lightboxOpen && item.photo_url && (
+        <PhotoLightbox
+          src={item.photo_url}
+          alt={item.name}
+          caption={`${item.name} · ${formatPrice(item.price)}`}
+          onClose={() => setLightboxOpen(false)}
+        />
+      )}
     </div>
   );
 }
