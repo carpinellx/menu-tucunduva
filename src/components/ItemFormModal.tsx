@@ -1,6 +1,7 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import type { Category, Item } from '../lib/types';
 import { createItem, deleteItem, deleteItemPhoto, updateItem, uploadItemPhoto } from '../lib/api';
+import { DIETARY_TAGS } from '../lib/Dietarytags';
 
 interface Props {
   categories: Category[];
@@ -19,6 +20,7 @@ export default function ItemFormModal({ categories, items, editingItem, onClose,
   const [price, setPrice] = useState('');
   const [categoryId, setCategoryId] = useState('');
   const [visible, setVisible] = useState(true);
+  const [tags, setTags] = useState<string[]>([]);
   const [photoUrl, setPhotoUrl] = useState<string | null>(null);
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [photoRemoved, setPhotoRemoved] = useState(false);
@@ -32,6 +34,7 @@ export default function ItemFormModal({ categories, items, editingItem, onClose,
       setPrice(String(editingItem.price));
       setCategoryId(editingItem.category_id);
       setVisible(editingItem.visible);
+      setTags(editingItem.tags ?? []);
       setPhotoUrl(editingItem.photo_url);
     } else {
       setName('');
@@ -39,6 +42,7 @@ export default function ItemFormModal({ categories, items, editingItem, onClose,
       setPrice('');
       setCategoryId(sortedCats[0]?.id ?? '');
       setVisible(true);
+      setTags([]);
       setPhotoUrl(null);
     }
     setPhotoFile(null);
@@ -60,6 +64,10 @@ export default function ItemFormModal({ categories, items, editingItem, onClose,
     setPhotoFile(null);
     setPhotoUrl(null);
     setPhotoRemoved(true);
+  }
+
+  function toggleTag(tagId: string) {
+    setTags((prev) => (prev.includes(tagId) ? prev.filter((t) => t !== tagId) : [...prev, tagId]));
   }
 
   async function handleSubmit(e: FormEvent) {
@@ -102,6 +110,7 @@ export default function ItemFormModal({ categories, items, editingItem, onClose,
           price: priceNum,
           category_id: categoryId,
           visible,
+          tags,
           ...(finalPhotoUrl !== undefined ? { photo_url: finalPhotoUrl } : {}),
         });
       } else {
@@ -112,6 +121,7 @@ export default function ItemFormModal({ categories, items, editingItem, onClose,
           price: priceNum,
           category_id: categoryId,
           visible,
+          tags,
           photo_url: finalPhotoUrl ?? null,
           sort_order: maxOrder + 1,
         });
@@ -220,6 +230,22 @@ export default function ItemFormModal({ categories, items, editingItem, onClose,
                 </option>
               ))}
             </select>
+          </div>
+
+          <div className="field">
+            <label>Tags de dieta/restrição</label>
+            <div className="tag-checks">
+              {DIETARY_TAGS.map((t) => (
+                <label key={t.id} className={`tag-check ${tags.includes(t.id) ? 'on' : ''}`}>
+                  <input
+                    type="checkbox"
+                    checked={tags.includes(t.id)}
+                    onChange={() => toggleTag(t.id)}
+                  />
+                  {t.label}
+                </label>
+              ))}
+            </div>
           </div>
 
           <div className="field" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>

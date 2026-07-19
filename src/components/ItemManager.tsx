@@ -1,5 +1,6 @@
 import type { Category, Item } from '../lib/types';
 import { toggleItemVisibility } from '../lib/api';
+import { tagLabel } from '../lib/Dietarytags';
 
 function formatPrice(v: number): string {
   return 'R$ ' + v.toFixed(2).replace('.', ',');
@@ -67,6 +68,9 @@ export default function ItemManager({ categories, items, onChange, onEdit, onNew
                 <span className="item-row-name">
                   {item.name}
                   <small>{formatPrice(item.price)}</small>
+                  {item.tags && item.tags.length > 0 && (
+                    <small>{item.tags.map(tagLabel).join(' · ')}</small>
+                  )}
                 </span>
                 <button
                   type="button"

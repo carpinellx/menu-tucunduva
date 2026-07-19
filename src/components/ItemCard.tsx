@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { Item } from '../lib/types';
+import { tagLabel } from '../lib/Dietarytags';
 
 function formatPrice(v: number): string {
   return 'R$ ' + v.toFixed(2).replace('.', ',');
@@ -31,6 +32,15 @@ export default function ItemCard({ item, compact = false }: { item: Item; compac
           <span className="item-price">{formatPrice(item.price)}</span>
         </div>
         {item.description && <p className="item-desc">{item.description}</p>}
+        {item.tags && item.tags.length > 0 && (
+          <div className="item-tags">
+            {item.tags.map((t) => (
+              <span key={t} className="item-tag">
+                {tagLabel(t)}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

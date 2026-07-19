@@ -14,5 +14,6 @@ export interface Item {
   photo_url: string | null;
   visible: boolean;
   sort_order: number;
+  tags: string[];
   created_at: string;
 }
