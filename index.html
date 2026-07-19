@@ -8,6 +8,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Fazenda Tucunduva — Cardápio</title>
     <meta name="theme-color" content="#36537D" />
+    <script>
+      (function () {
+        try {
+          var theme = localStorage.getItem('tucunduva:theme');
+          if (theme === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+          var fontSize = localStorage.getItem('tucunduva:fontScale');
+          if (fontSize === 'grande' || fontSize === 'maior') {
+            document.documentElement.setAttribute('data-fontsize', fontSize);
+          }
+        } catch (e) {}
+      })();
+    </script>
     <meta
       name="description"
       content="Cardápio digital da Fazenda Tucunduva — da terra à mesa, todos os dias."

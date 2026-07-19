@@ -3,8 +3,12 @@ import { Link } from 'react-router-dom';
 import { fetchCategories, fetchItems } from '../lib/api';
 import type { Category, Item } from '../lib/types';
 import ItemCard from '../components/ItemCard';
+import { useTheme } from '../lib/useTheme';
+import { useFontScale } from '../lib/useFontScale';
 
 export default function Menu() {
+  const { theme, toggleTheme } = useTheme();
+  const { scale, setScale } = useFontScale();
   const [categories, setCategories] = useState<Category[]>([]);
   const [items, setItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState(true);
@@ -133,6 +137,48 @@ function itemsFor(catId: string): Item[] {
               onClick={() => setShowPhotos(false)}
             >
               Clássico
+            </button>
+          </div>
+
+          <div className="a11y-bar">
+            <div className="font-scale" role="group" aria-label="Tamanho da letra">
+              <button
+                type="button"
+                className={`font-scale-btn ${scale === 'normal' ? 'active' : ''}`}
+                aria-pressed={scale === 'normal'}
+                aria-label="Letra tamanho normal"
+                onClick={() => setScale('normal')}
+              >
+                A
+              </button>
+              <button
+                type="button"
+                className={`font-scale-btn font-scale-md ${scale === 'grande' ? 'active' : ''}`}
+                aria-pressed={scale === 'grande'}
+                aria-label="Letra grande"
+                onClick={() => setScale('grande')}
+              >
+                A
+              </button>
+              <button
+                type="button"
+                className={`font-scale-btn font-scale-lg ${scale === 'maior' ? 'active' : ''}`}
+                aria-pressed={scale === 'maior'}
+                aria-label="Letra maior"
+                onClick={() => setScale('maior')}
+              >
+                A
+              </button>
+            </div>
+
+            <button
+              type="button"
+              className="theme-toggle-btn"
+              aria-pressed={theme === 'dark'}
+              aria-label={theme === 'dark' ? 'Mudar para modo claro' : 'Mudar para modo escuro'}
+              onClick={toggleTheme}
+            >
+              {theme === 'dark' ? '☀︎' : '☾'}
             </button>
           </div>
         </div>

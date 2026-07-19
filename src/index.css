@@ -25,6 +25,7 @@ body {
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
   overscroll-behavior-y: none;
+  transition: background-color .2s ease, color .2s ease;
 }
 button { font-family: inherit; cursor: pointer; touch-action: manipulation; }
 input, textarea, select { font-family: inherit; }
@@ -298,4 +299,52 @@ main.menu-main { max-width: 680px; margin: 0 auto; padding: 8px 20px 80px; }
 @media (max-width: 480px) {
   .site-header { padding: 40px 16px 22px; }
   .modal-box { padding: 22px; }
+}
+
+/* ---------- Barra de acessibilidade (tamanho de letra + modo escuro) ---------- */
+.a11y-bar {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  margin-top: 12px;
+}
+
+.font-scale {
+  display: inline-flex; align-items: center; border: 1px solid var(--line);
+  border-radius: 999px; padding: 3px; background: var(--surface); gap: 2px;
+}
+.font-scale-btn {
+  border: none; background: none; width: 30px; height: 30px; border-radius: 999px;
+  font-family: 'Karla', sans-serif; font-weight: 700; color: var(--ink-soft);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; transition: all .15s ease;
+}
+.font-scale-btn.font-scale-md { font-size: 15px; }
+.font-scale-btn.font-scale-lg { font-size: 18px; }
+.font-scale-btn.active { background: var(--accent); color: #fff; }
+
+.theme-toggle-btn {
+  width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--line);
+  background: var(--surface); color: var(--ink); font-size: 16px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .15s ease;
+}
+.theme-toggle-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ---------- Tamanho de letra (zoom geral, acompanha layout inteiro) ---------- */
+:root { --zoom: 1; }
+html[data-fontsize="grande"] { --zoom: 1.15; }
+html[data-fontsize="maior"] { --zoom: 1.3; }
+#root { zoom: var(--zoom); }
+
+/* ---------- Modo escuro =====
+   Mesmo espírito da paleta clara: fundo, superfície e texto invertem;
+   os azuis/dourado de destaque continuam os mesmos, pra marca não perder
+   identidade — só o "papel" por baixo que vira escuro. */
+[data-theme="dark"] {
+  --bg: #0F1826;
+  --surface: #172236;
+  --surface-2: #1F2E47;
+  --ink: #E8ECF4;
+  --ink-soft: #93A3BE;
+  --line: rgba(255, 255, 255, 0.10);
+  --shadow: rgba(0, 0, 0, 0.5);
 }
