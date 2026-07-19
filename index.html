@@ -20,9 +20,33 @@
       property="og:description"
       content="Cardápio digital da Fazenda Tucunduva — da terra à mesa, todos os dias."
     />
-    <meta property="og:image" content="https://menu-tucunduva.vercel.app/og-image.jpg" />
+    <meta property="og:image" content="https://SEU-DOMINIO.com/og-image.jpg" />
 
     <meta name="twitter:card" content="summary_large_image" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Restaurant",
+        "name": "Fazenda Tucunduva",
+        "servesCuisine": "Brasileira",
+        "telephone": "+5511980435834",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Rod. Dom Gabriel Paulino Bueno Couto, km 92,5 - Pedregulho",
+          "addressLocality": "Cabreúva",
+          "addressRegion": "SP",
+          "addressCountry": "BR"
+        },
+        "openingHoursSpecification": {
+          "@type": "OpeningHoursSpecification",
+          "opens": "12:00",
+          "closes": "17:00"
+        },
+        "sameAs": ["https://instagram.com/fazendatucunduva"],
+        "hasMenu": "https://SEU-DOMINIO.com/"
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>
