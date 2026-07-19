@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { Item } from '../lib/types';
-import { tagLabel } from '../lib/Dietarytags';
+import { tagLabel } from '../lib/dietaryTags';
 
 function formatPrice(v: number): string {
   return 'R$ ' + v.toFixed(2).replace('.', ',');

@@ -1,6 +1,6 @@
 import type { Category, Item } from '../lib/types';
 import { toggleItemVisibility } from '../lib/api';
-import { tagLabel } from '../lib/Dietarytags';
+import { tagLabel } from '../lib/dietaryTags';
 
 function formatPrice(v: number): string {
   return 'R$ ' + v.toFixed(2).replace('.', ',');

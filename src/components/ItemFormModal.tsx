@@ -1,7 +1,7 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import type { Category, Item } from '../lib/types';
 import { createItem, deleteItem, deleteItemPhoto, updateItem, uploadItemPhoto } from '../lib/api';
-import { DIETARY_TAGS } from '../lib/Dietarytags';
+import { DIETARY_TAGS } from '../lib/dietaryTags';;
 
 interface Props {
   categories: Category[];
