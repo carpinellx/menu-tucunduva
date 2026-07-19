@@ -10,6 +10,13 @@ export default function Menu() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeCat, setActiveCat] = useState<string | null>(null);
+  const [showPhotos, setShowPhotos] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem('tucunduva:showPhotos') !== 'false';
+    } catch {
+      return true;
+    }
+  });
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
   const pillRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   const isClickScrolling = useRef(false);
@@ -72,6 +79,14 @@ useEffect(() => {
 }, [activeCat]);
 
 useEffect(() => {
+  try {
+    localStorage.setItem('tucunduva:showPhotos', String(showPhotos));
+  } catch {
+    /* localStorage indisponível (modo privado, etc.) — sem problema, só não persiste */
+  }
+}, [showPhotos]);
+
+useEffect(() => {
   return () => {
     if (clickScrollTimeout.current) clearTimeout(clickScrollTimeout.current);
   };
@@ -101,6 +116,25 @@ function itemsFor(catId: string): Item[] {
           <p className="eyebrow">Fazenda Tucunduva</p>
           <h1>Cardápio</h1>
           <p className="tagline">Da terra à mesa, todos os dias.</p>
+
+          <div className="view-toggle" role="group" aria-label="Modo de exibição do cardápio">
+            <button
+              type="button"
+              className={`view-toggle-btn ${showPhotos ? 'active' : ''}`}
+              aria-pressed={showPhotos}
+              onClick={() => setShowPhotos(true)}
+            >
+              Ilustrado
+            </button>
+            <button
+              type="button"
+              className={`view-toggle-btn ${!showPhotos ? 'active' : ''}`}
+              aria-pressed={!showPhotos}
+              onClick={() => setShowPhotos(false)}
+            >
+              Clássico
+            </button>
+          </div>
         </div>
       </header>
 
@@ -129,7 +163,7 @@ function itemsFor(catId: string): Item[] {
                 <div className="skeleton skeleton-title" />
                 {[0, 1, 2].map((row) => (
                   <div key={row} className="item-card">
-                    <div className="skeleton skeleton-photo" />
+                    {showPhotos && <div className="skeleton skeleton-photo" />}
                     <div className="item-body">
                       <div className="skeleton skeleton-line" style={{ width: '55%' }} />
                       <div className="skeleton skeleton-line" style={{ width: '85%' }} />
@@ -171,7 +205,7 @@ function itemsFor(catId: string): Item[] {
                 <div className="cat-rule" />
               </div>
               {itemsFor(c.id).map((item) => (
-                <ItemCard key={item.id} item={item} />
+                <ItemCard key={item.id} item={item} compact={!showPhotos} />
               ))}
             </section>
           ))}

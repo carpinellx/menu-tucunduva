@@ -65,6 +65,18 @@ a { color: inherit; }
 }
 .tagline { color: var(--ink-soft); font-size: 15px; margin: 0; letter-spacing: 0.02em; }
 
+/* ---------- View toggle (com fotos / só texto) ---------- */
+.view-toggle {
+  display: inline-flex; margin-top: 16px; border: 1px solid var(--line);
+  border-radius: 999px; padding: 3px; background: var(--surface);
+}
+.view-toggle-btn {
+  border: none; background: none; padding: 7px 16px; border-radius: 999px;
+  font-family: 'Karla', sans-serif; font-size: 12.5px; font-weight: 600;
+  letter-spacing: 0.02em; color: var(--ink-soft); transition: all .15s ease;
+}
+.view-toggle-btn.active { background: var(--accent); color: #fff; }
+
 /* ---------- Category nav ---------- */
 .cat-nav {
   position: sticky; top: 0; z-index: 20;
@@ -122,6 +134,9 @@ main.menu-main { max-width: 680px; margin: 0 auto; padding: 8px 20px 80px; }
 .item-row-top { display: flex; align-items: baseline; gap: 6px; }
 .item-name { font-family: 'Fraunces', serif; font-weight: 600; font-size: 17px; white-space: normal; word-break: break-word; }
 .item-leader { flex: 1 1 auto; min-width: 10px; border-bottom: 1px dotted var(--line); margin-bottom: 5px; }
+
+.item-card--compact { padding: 13px 0; }
+.item-card--compact .item-name { font-size: 16px; }
 
 /* ---------- Skeleton (loading state) ---------- */
 .skeleton {
