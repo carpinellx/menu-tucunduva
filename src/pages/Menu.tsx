@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { fetchCategories, fetchItems } from '../lib/api';
+import { supabase } from '../lib/supabaseClient';
 import type { Category, Item } from '../lib/types';
 import ItemCard from '../components/ItemCard';
 import { useTheme } from '../lib/useTheme';
@@ -26,19 +27,63 @@ export default function Menu() {
   const isClickScrolling = useRef(false);
   const clickScrollTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const [cats, its] = await Promise.all([fetchCategories(), fetchItems()]);
-        setCategories(cats);
-        setItems(its);
-      } catch (e) {
-        console.error(e);
+  const isFetchingRef = useRef(false);
+
+  async function loadData(isBackground = false) {
+    if (isFetchingRef.current) return;
+    isFetchingRef.current = true;
+    try {
+      const [cats, its] = await Promise.all([fetchCategories(), fetchItems()]);
+      setCategories(cats);
+      setItems(its);
+      setError(null);
+    } catch (e) {
+      console.error('Falha ao atualizar o cardápio:', e);
+      // Em atualizações de fundo, não mexemos no que já está na tela —
+      // se a internet caiu, o cliente continua vendo o último cardápio
+      // que carregou certinho, em vez de dar erro ou ficar em branco.
+      if (!isBackground) {
         setError('Não foi possível carregar o cardápio agora. Tente novamente em instantes.');
-      } finally {
-        setLoading(false);
       }
-    })();
+    } finally {
+      isFetchingRef.current = false;
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    loadData(false);
+
+    // Tempo real: o Supabase avisa a página assim que uma categoria ou item
+    // muda no banco (ex.: você esconde um prato no admin), sem precisar
+    // ficar perguntando de tempos em tempos.
+    const channel = supabase
+      .channel('cardapio-mudancas')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'items' }, () => {
+        loadData(true);
+      })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'categories' }, () => {
+        loadData(true);
+      })
+      .subscribe();
+
+    // Rede de segurança: se o celular ficou sem internet um tempo (ou a tela
+    // travada) e perdeu algum aviso em tempo real, assim que a conexão volta
+    // ou a pessoa retorna pro app, a gente busca o cardápio atualizado de novo.
+    function handleReconnect() {
+      loadData(true);
+    }
+    function handleVisibility() {
+      if (document.visibilityState === 'visible') handleReconnect();
+    }
+    window.addEventListener('online', handleReconnect);
+    document.addEventListener('visibilitychange', handleVisibility);
+
+    return () => {
+      supabase.removeChannel(channel);
+      window.removeEventListener('online', handleReconnect);
+      document.removeEventListener('visibilitychange', handleVisibility);
+    };
   }, []);
 
   const visibleCats = useMemo(() => {
@@ -128,7 +173,7 @@ function itemsFor(catId: string): Item[] {
               aria-pressed={showPhotos}
               onClick={() => setShowPhotos(true)}
             >
-              Ilustrado
+              Com fotos
             </button>
             <button
               type="button"
@@ -136,7 +181,7 @@ function itemsFor(catId: string): Item[] {
               aria-pressed={!showPhotos}
               onClick={() => setShowPhotos(false)}
             >
-              Clássico
+              Só texto
             </button>
           </div>
 
